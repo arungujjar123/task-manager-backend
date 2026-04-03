@@ -14,9 +14,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    googleCalendarIntegration: {
+      enabled: { type: Boolean, default: false },
+      accessToken: { type: String },
+      refreshToken: { type: String },
+      tokenExpiry: { type: Date },
+    },
     settings: {},
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = mongoose.model("User", userSchema);

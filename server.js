@@ -5,12 +5,26 @@ import cors from "cors";
 
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import calendarRoutes from "./routes/calendarRoutes.js";
 
 dotenv.config();
 const app = express();
 
-// CORS - Allow all origins during development
-app.use(cors());
+// CORS configuration for Vercel
+const corsOptions = {
+  origin: [
+    "https://task-manager-frontend-yxlx.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // basic health check
@@ -19,6 +33,7 @@ app.get("/", (req, res) => res.send("Task Manager API running..."));
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/calendar", calendarRoutes);
 
 const PORT = process.env.PORT || 5000;
 
