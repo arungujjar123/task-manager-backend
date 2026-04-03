@@ -66,6 +66,17 @@ const taskSchema = new mongoose.Schema(
       required: true,
     },
 
+    googleCalendarEventId: {
+      type: String,
+    },
+    syncedWithCalendar: {
+      type: Boolean,
+      default: false,
+    },
+    lastCalendarSyncTime: {
+      type: Date,
+    },
+
     subtasks: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
@@ -74,7 +85,7 @@ const taskSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Task = mongoose.model("Task", taskSchema);
