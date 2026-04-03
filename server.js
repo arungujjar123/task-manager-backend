@@ -11,19 +11,35 @@ dotenv.config();
 const app = express();
 
 // CORS configuration for Vercel
+const allowedOrigins = new Set([
+  "https://task-manager-frontend-yxlx.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+]);
+
 const corsOptions = {
-  origin: [
-    "https://task-manager-frontend-yxlx.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173",
-  ],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.has(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, false);
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
+app.options("/*path", cors(corsOptions));
+
+// Ensure preflight requests always return OK before auth/routes
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  return next();
+});
 
 app.use(express.json());
 
